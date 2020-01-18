@@ -10,11 +10,10 @@ namespace SimpleAuthorization.Initializer
     {
         private readonly List<ISecurityIdentityProvider> _securityIdentityProviders = new List<ISecurityIdentityProvider>();
         private readonly List<IAuthorizableItemProvider> _authorizableItemProviders = new List<IAuthorizableItemProvider>();
-        private List<IAuthorizationProvider> _authorizationProviders = new List<IAuthorizationProvider>();
+        private readonly List<IAuthorizationProvider> _authorizationProviders = new List<IAuthorizationProvider>();
         private readonly List<ISecurityItemProvider> _securityItemProviders = new List<ISecurityItemProvider>();
         #region Implementation of IStoreBuilder
 
-        public IStorageBuilder Storage { get; }
         public IStoreBuilder AddSecurityIdentity(ISecurityIdentity securityIdentity)
         {
             _securityIdentityProviders.Add(new SecurityIdentityProvider(Enumerable.Repeat(securityIdentity, 1)));
@@ -32,7 +31,7 @@ namespace SimpleAuthorization.Initializer
 
         public IStoreBuilder AddAuthorizableItem(IAuthorisableItem authorisableItem)
         {
-            _authorizableItemProviders.Add(new AuthorizableItemProvider(Enumerable.Repeat(authorisableItem,1)));
+            _authorizableItemProviders.Add(new AuthorizableItemProvider(Enumerable.Repeat(authorisableItem, 1)));
             return this;
         }
 
@@ -65,6 +64,16 @@ namespace SimpleAuthorization.Initializer
         public IStoreBuilder AddAuthrizationProvider(IAuthorizationProvider authorizationProvider)
         {
             _authorizationProviders.Add(authorizationProvider);
+            return this;
+        }
+
+        public IStoreBuilder AddStorage(ISecurityStorage storage)
+        {
+            Storage innerStorage = new Storage(storage);
+            _securityIdentityProviders.Add(innerStorage);
+            _securityItemProviders.Add(innerStorage);
+            _authorizableItemProviders.Add(innerStorage);
+            _authorizationProviders.Add(innerStorage);
             return this;
         }
 
@@ -240,6 +249,121 @@ namespace SimpleAuthorization.Initializer
             }
 
             #endregion
+        }
+        private class Storage : ISecurityIdentityProvider, IAuthorizableItemProvider, IAuthorizationProvider, ISecurityItemProvider
+        {
+            private readonly ISecurityStorage _storage;
+            private List<IAuthorisableItem> _authorisableItems;
+            public Storage(ISecurityStorage storage)
+            {
+                _storage = storage;
+                _storage.Changed+=StorageOnChanged;
+                StorageOnChanged(null, null);
+            }
+
+            private void StorageOnChanged(object sender, EventArgs e)
+            {
+                _authorisableItems = new List<IAuthorisableItem>();
+                Dictionary<Guid, HashSet<Guid>> map = _storage.AuthorizableHierarchies
+                    .GroupBy(h => h.AuthorizableItemKey).ToDictionary(g => g.Key,
+                        g => new HashSet<Guid>(g.Select(a => a.SecurityIdentityKey)));
+                foreach (Guid authorizableItemKey in _storage.AuthorizableItemKeys)
+                {
+                    map.TryGetValue(authorizableItemKey, out HashSet<Guid> children);
+                    _authorisableItems.Add(new AuthorizableItem(authorizableItemKey, children ?? new HashSet<Guid>())); 
+                }
+            }
+
+            #region Implementation of ISecurityIdentityProvider
+
+            IEnumerable<ISecurityIdentity> ISecurityIdentityProvider.Provide()
+            {
+                return _storage.SecurityIdentityKeys.Select(key => new SecurityIdentity(key));
+            }
+
+            public IEnumerable<Guid> ProvideSecurityItemKeys()
+            {
+                return _storage.SecurityItemKeys;
+            }
+
+            public IEnumerable<ISecurityHierarchy> ProvideSecurityHierarchies()
+            {
+                return _storage.SecurityHierarchies;
+            }
+
+            event EventHandler ISecurityItemProvider.Changed
+            {
+                add => _storage.Changed += value;
+                remove => _storage.Changed -= value;
+            }
+
+
+            event EventHandler IAuthorizationProvider.Changed
+            {
+                add => _storage.Changed += value;
+                remove => _storage.Changed -= value;
+            }
+
+            IEnumerable<IStorageAuthorization> IAuthorizationProvider.Provide()
+            {
+                return _storage.Authorizations;
+            }
+
+            event EventHandler IAuthorizableItemProvider.Changed
+            {
+                add => _storage.Changed += value;
+                remove => _storage.Changed -= value;
+            }
+
+            IEnumerable<IAuthorisableItem> IAuthorizableItemProvider.Provide()
+            {
+                return _authorisableItems;
+            }
+
+            event EventHandler ISecurityIdentityProvider.Changed
+            {
+                add => _storage.Changed += value;
+                remove => _storage.Changed -= value;
+            }
+
+            #endregion
+            private class SecurityIdentity:ISecurityIdentity
+            {
+                public SecurityIdentity(Guid key)
+                {
+                    Key = key;
+                }
+
+                #region Implementation of ISecurityIdentity
+
+                public Guid Key { get; }
+
+                #endregion
+            }
+            private class AuthorizableItem:IAuthorisableItem
+            {
+                private readonly HashSet<Guid> _childrenSecurityIdentity;
+
+                public AuthorizableItem(Guid key,HashSet<Guid> childrenSecurityIdentity)
+                {
+                    _childrenSecurityIdentity = childrenSecurityIdentity;
+                    Key = key;
+                }
+                #region Implementation of IAuthorisableItem
+
+                public Guid Key { get; }
+                public IEnumerable<ISecurityIdentity> GetSecurityIdentities()
+                {
+                    return _childrenSecurityIdentity.Select(key => new SecurityIdentity(key));
+                }
+
+                public bool ContainSecurityIdentity(ISecurityIdentity securityIdentity)
+                {
+                    return _childrenSecurityIdentity.Contains(securityIdentity.Key);
+                }
+
+                #endregion
+            }
         }
     }
 }
