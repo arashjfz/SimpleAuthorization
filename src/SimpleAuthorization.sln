@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.902
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleAuthorization", "SimpleAuthorization\SimpleAuthorization.csproj", "{7D331E23-44D3-4BC3-BBDC-48A6B2BCDA15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleAuthorization", "SimpleAuthorization\SimpleAuthorization.csproj", "{7D331E23-44D3-4BC3-BBDC-48A6B2BCDA15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleAuthorization.Test", "SimpleAuthorization.Test\SimpleAuthorization.Test.csproj", "{EBBACE4E-93E8-48F7-A27A-BBE2012C0A68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{7D331E23-44D3-4BC3-BBDC-48A6B2BCDA15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D331E23-44D3-4BC3-BBDC-48A6B2BCDA15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D331E23-44D3-4BC3-BBDC-48A6B2BCDA15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBBACE4E-93E8-48F7-A27A-BBE2012C0A68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBBACE4E-93E8-48F7-A27A-BBE2012C0A68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBBACE4E-93E8-48F7-A27A-BBE2012C0A68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBBACE4E-93E8-48F7-A27A-BBE2012C0A68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

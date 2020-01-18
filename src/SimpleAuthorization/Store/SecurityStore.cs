@@ -92,7 +92,7 @@ namespace SimpleAuthorization.Store
                     _authorizableItems[storageAuthorization.AuthorisableItemKey],
                     _securityItems[storageAuthorization.SecurityItemKey],
                     BinaryFormat<IAuthorizationLifeCycle>(storageAuthorization.LifeCycle),
-                    storageAuthorization == null
+                    storageAuthorization.DelegatedByKey == null
                         ? null
                         : _securityIdentities[storageAuthorization.DelegatedByKey.Value], storageAuthorization.Type,
                     storageAuthorization.Conditions == null
@@ -104,14 +104,28 @@ namespace SimpleAuthorization.Store
 
         private T BinaryFormat<T>(byte[] values)
         {
+            if (values == null)
+                return default(T);
             BinaryFormatter formatter = new BinaryFormatter();
             return (T) formatter.Deserialize(new MemoryStream(values));
         }
         #region Implementation of ISecurityStore
 
+        public ISecurityItem GetSecurityItem(Guid key)
+        {
+            _securityItems.TryGetValue(key, out ISecurityItem securityItem);
+            return securityItem;
+        }
+
         public IEnumerable<ISecurityItem> GetSecurityItems()
         {
             return _securityItems.Values;
+        }
+
+        public IAuthorisableItem GetAuthorizableItem(Guid key)
+        {
+            _authorizableItems.TryGetValue(key, out IAuthorisableItem authorisableItem);
+            return authorisableItem;
         }
 
         public IEnumerable<IAuthorisableItem> GetAuthorisableItems()
@@ -119,9 +133,21 @@ namespace SimpleAuthorization.Store
             return _authorizableItems.Values;
         }
 
+        public ISecurityIdentity GetSecurityIdentity(Guid key)
+        {
+            _securityIdentities.TryGetValue(key, out ISecurityIdentity securityIdentity);
+            return securityIdentity;
+        }
+
         public IEnumerable<ISecurityIdentity> GetSecurityIdentities()
         {
             return _securityIdentities.Values;
+        }
+
+        public IAuthorization GetAuthorization(Guid key)
+        {
+            _authorizations.TryGetValue(key, out IAuthorization authorization);
+            return authorization;
         }
 
         public IEnumerable<IAuthorization> GetAuthorizations()
@@ -202,26 +228,5 @@ namespace SimpleAuthorization.Store
         {
             Changed?.Invoke(this, EventArgs.Empty);
         }
-    }
-    public interface ISecurityIdentityProvider
-    {
-        IEnumerable<ISecurityIdentity> Provide();
-        event EventHandler Changed;
-    }
-    public interface IAuthorizableItemProvider
-    {
-        IEnumerable<IAuthorisableItem> Provide();
-        event EventHandler Changed;
-    }
-    public interface ISecurityItemProvider
-    {
-        IEnumerable<Guid> ProvideSecurityItemKeys();
-        IEnumerable<ISecurityHierarchy> ProvideSecurityHierarchies();
-        event EventHandler Changed;
-    }
-    public interface IAuthorizationProvider
-    {
-        IEnumerable<IStorageAuthorization> Provide();
-        event EventHandler Changed;
     }
 }

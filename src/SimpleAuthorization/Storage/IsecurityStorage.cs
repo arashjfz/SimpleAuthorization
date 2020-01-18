@@ -17,22 +17,4 @@ namespace SimpleAuthorization.Storage
         void RemoveAuthorizations(IEnumerable<IStorageAuthorization> authorizations);
         void AddAuthorizations(IEnumerable<IStorageAuthorization> authorizations);
     }
-
-    public interface ISecurityHierarchy
-    {
-        Guid SecurityItemKey { get; }
-        Guid SecurityItemParentKey { get; }
-    }
-
-    public interface IStorageAuthorization
-    {
-        Guid Key { get; }
-        Guid AuthorisableItemKey { get; }
-        Guid SecurityItemKey { get; }
-        byte[] LifeCycle { get; }
-        Guid? DelegatedByKey { get; }
-        AuthorizationType Type { get; }
-        IEnumerable<byte[]> Conditions { get; }
-
-    }
 }
