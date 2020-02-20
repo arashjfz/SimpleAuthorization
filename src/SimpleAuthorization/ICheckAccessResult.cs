@@ -5,7 +5,7 @@ namespace SimpleAuthorization
     public interface ICheckAccessResult
     {
         AccessType AccessType { get; }
-        IEnumerable<ISecurityIdentity> DelegatedFrom { get; }
+        IEnumerable<IAccessAuthorization> AffectedAuthorizations { get; }
     }
 
     public static class CheckAccessResultExtensions

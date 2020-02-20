@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace SimpleAuthorization.Activator
+namespace SimpleAuthorization.Engine
 {
     internal class AccessAuthorization:IAccessAuthorization,INotifyPropertyChanged
     {

@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace SimpleAuthorization.Activator
+namespace SimpleAuthorization.Engine
 {
     internal class ConditionalAuthorization:IConditionalAuthorization,INotifyPropertyChanged
     {

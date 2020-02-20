@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
-namespace SimpleAuthorization.Activator
+namespace SimpleAuthorization.Engine
 {
     internal class SecurityCollection<T>:ICollection<T>, INotifyCollectionChanged,IReadOnlyCollection<T>
     {

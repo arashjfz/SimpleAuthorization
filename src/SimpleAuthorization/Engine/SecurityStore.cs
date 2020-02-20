@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 
-namespace SimpleAuthorization.Activator
+namespace SimpleAuthorization.Engine
 {
     internal class SecurityStore : ISecurityStore
     {

@@ -1,4 +1,4 @@
-﻿using SimpleAuthorization.Activator;
+﻿using SimpleAuthorization.Engine;
 
 namespace SimpleAuthorization
 {

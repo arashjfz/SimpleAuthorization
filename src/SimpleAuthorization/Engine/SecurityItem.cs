@@ -1,35 +1,35 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 
-namespace SimpleAuthorization.Activator
+namespace SimpleAuthorization.Engine
 {
-    internal class SecurityIdentity:ISecurityIdentity
+    internal class SecurityItem:ISecurityItem
     {
-        public SecurityIdentity(ISecurityStore store)
+        public SecurityItem(ISecurityStore store)
         {
             Store = store;
             Bag = new SecurityBag();
-            Children = new SecurityCollection<ISecurityIdentity>().RegisterCollectionNotifyChanged(ChildrenChanged);
-            Parents = new SecurityCollection<ISecurityIdentity>().RegisterCollectionNotifyChanged(ParentsChanged);
+            Children = new SecurityCollection<ISecurityItem>().RegisterCollectionNotifyChanged(ChildrenChanged);
+            Parents = new SecurityCollection<ISecurityItem>().RegisterCollectionNotifyChanged(ParentsChanged);
         }
 
         private void ParentsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                ISecurityIdentity parent = (ISecurityIdentity)e.NewItems[0];
+                ISecurityItem parent = (ISecurityItem)e.NewItems[0];
                 parent.Children.Add(this);
             }
 
             if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                ISecurityIdentity parent = (ISecurityIdentity)e.OldItems[0];
+                ISecurityItem parent = (ISecurityItem)e.OldItems[0];
                 parent.Children.Remove(this);
             }
 
             if (e.Action == NotifyCollectionChangedAction.Reset)
             {
-                foreach (ISecurityIdentity parent in e.OldItems)
+                foreach (ISecurityItem parent in e.OldItems)
                 {
                     parent.Children.Remove(this);
                 }
@@ -40,17 +40,17 @@ namespace SimpleAuthorization.Activator
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                ISecurityIdentity child = (ISecurityIdentity)e.NewItems[0];
+                ISecurityItem child = (ISecurityItem)e.NewItems[0];
                 child.Parents.Add(this);
             }
             if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                ISecurityIdentity child = (ISecurityIdentity)e.OldItems[0];
+                ISecurityItem child = (ISecurityItem)e.OldItems[0];
                 child.Parents.Remove(this);
             }
             if (e.Action == NotifyCollectionChangedAction.Reset)
             {
-                foreach (ISecurityIdentity child in e.OldItems)
+                foreach (ISecurityItem child in e.OldItems)
                 {
                     child.Parents.Remove(this);
                 }
@@ -58,18 +58,17 @@ namespace SimpleAuthorization.Activator
 
         }
 
-        #region Implementation of IBagObject
+        #region Implementation of ISecurityItem
 
-        public ISecurityBag Bag { get; }
+        public ISecurityStore Store { get; }
+        public ICollection<ISecurityItem> Children { get; }
+        public ICollection<ISecurityItem> Parents { get; }
 
         #endregion
 
-        #region Implementation of ISecurityIdentity
+        #region Implementation of IBagObject
 
-        public ISecurityStore Store { get; }
-        public bool IsActive { get; set; }
-        public ICollection<ISecurityIdentity> Children { get; set; }
-        public ICollection<ISecurityIdentity> Parents { get; set; }
+        public ISecurityBag Bag { get; }
 
         #endregion
     }

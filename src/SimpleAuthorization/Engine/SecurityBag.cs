@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SimpleAuthorization.Activator
+namespace SimpleAuthorization.Engine
 {
     internal class SecurityBag : Dictionary<string, object>, ISecurityBag
     {

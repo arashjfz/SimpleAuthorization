@@ -1,13 +1,5 @@
-﻿namespace SimpleAuthorization.Activator
+﻿namespace SimpleAuthorization.Engine
 {
-    public class EngineFactory
-    {
-        public ISecurityEngine CreateEngine()
-        {
-            return new SecurityEngine();
-        }
-    }
-
     public static class ActivationExtensions
     {
         public static ISecurityItem AddSecurityItem(this ISecurityStore store)
@@ -46,6 +38,28 @@
         {
             bagObject.Bag.Add(key,value);
             return bagObject;
+        }
+
+        public static IAccessAuthorization Deny(this IAccessAuthorization authorization)
+        {
+            authorization.AccessType = AccessType.Deny;
+            return authorization;
+        }
+        public static IAccessAuthorization Allow(this IAccessAuthorization authorization)
+        {
+            authorization.AccessType = AccessType.Allow;
+            return authorization;
+        }
+        public static IAccessAuthorization Neutral(this IAccessAuthorization authorization)
+        {
+            authorization.AccessType = AccessType.Neutral;
+            return authorization;
+        }
+
+        public static T SetLifeTime<T>(this T authorization,IAuthorizationLifeTime lifeTime) where T: IAuthorization
+        {
+            authorization.LifeTime = lifeTime;
+            return authorization;
         }
     }
 }
