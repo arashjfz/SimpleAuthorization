@@ -1,39 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SimpleAuthorization.Activator;
 
 namespace SimpleAuthorization
 {
-    public interface ISecurityItem
+    public interface ISecurityItem:  IBagObject
     {
-        Guid Key { get; }
-        IEnumerable<ISecurityItem> Parents { get; }
-        IEnumerable<ISecurityItem> Children { get; }
-    }
-
-    public static class SecurityItemExtensions
-    {
-        public static IEnumerable<ISecurityItem> GetAllParents(this ISecurityItem securityItem)
-        {
-            if(securityItem == null)
-                yield break;
-            foreach (ISecurityItem parent in securityItem.Parents)
-            {
-                yield return parent;
-                foreach (ISecurityItem ancestor in parent.GetAllParents())
-                    yield return ancestor;
-            }
-        }
-        public static IEnumerable<ISecurityItem> GetAllChildren(this ISecurityItem securityItem)
-        {
-            if (securityItem == null)
-                yield break;
-            foreach (ISecurityItem child in securityItem.Children)
-            {
-                yield return child;
-                foreach (ISecurityItem grandChild in child.GetAllChildren())
-                    yield return grandChild;
-            }
-        }
+        ISecurityStore Store { get; }
+        ICollection<ISecurityItem> Children { get; }
+        ICollection<ISecurityItem> Parents { get; }
 
     }
 }

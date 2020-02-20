@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleAuthorization", "Simp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleAuthorization.Test", "SimpleAuthorization.Test\SimpleAuthorization.Test.csproj", "{EBBACE4E-93E8-48F7-A27A-BBE2012C0A68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleAuthorization.NHibernate", "SimpleAuthorization.NHibernate\SimpleAuthorization.NHibernate.csproj", "{3D6033C4-D8FD-4A48-92C9-9467346815C5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{EBBACE4E-93E8-48F7-A27A-BBE2012C0A68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBBACE4E-93E8-48F7-A27A-BBE2012C0A68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBBACE4E-93E8-48F7-A27A-BBE2012C0A68}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3D6033C4-D8FD-4A48-92C9-9467346815C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D6033C4-D8FD-4A48-92C9-9467346815C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D6033C4-D8FD-4A48-92C9-9467346815C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D6033C4-D8FD-4A48-92C9-9467346815C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

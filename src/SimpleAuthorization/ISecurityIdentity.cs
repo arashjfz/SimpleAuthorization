@@ -1,9 +1,13 @@
-﻿using System;
+using System.Collections.Generic;
+using SimpleAuthorization.Activator;
 
 namespace SimpleAuthorization
 {
-    public interface ISecurityIdentity
+    public interface ISecurityIdentity: IBagObject
     {
-        Guid Key { get;  }
+        ISecurityStore Store { get; }
+        bool IsActive { get; set; }
+        ICollection<ISecurityIdentity> Children { get; set; }
+        ICollection<ISecurityIdentity> Parents { get; set; }
     }
 }

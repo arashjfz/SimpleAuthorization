@@ -1,21 +1,13 @@
-﻿using System.Collections.Generic;
+using SimpleAuthorization.Activator;
 
 namespace SimpleAuthorization
 {
-    public interface IAuthorization
+    public interface IAuthorization: IBagObject
     {
-        IAuthorisableItem AuthorisableItem { get; }
-        ISecurityItem SecurityItem { get; }
-        IAuthorizationLifeCycle LifeCycle { get; }
-        ISecurityIdentity DelegatedBy { get; }
-        AuthorizationType Type { get; }
-        IEnumerable<ICondition> Conditions { get; }
-    }
-
-    public enum AuthorizationType
-    {
-        Allow,
-        Deny,
-        Nutral
+        ISecurityStore Store { get; }
+        ISecurityItem SecurityItem { get; set; }
+        ISecurityIdentity SecurityIdentity { get; set; }
+        IAuthorizationLifeTime LifeTime { get; set; }
+        ISecurityIdentity DelegatedBy { get; set; }
     }
 }

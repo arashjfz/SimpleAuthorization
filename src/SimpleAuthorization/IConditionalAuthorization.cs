@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using SimpleAuthorization.Activator;
 
 namespace SimpleAuthorization
 {
     public interface IConditionalAuthorization : IAuthorization
     {
-        IEnumerable<ICondition> Conditions { get; }
+        IList<IAccessCondition> Conditions { get; }
     }
 }
