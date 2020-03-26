@@ -1,42 +1,53 @@
-﻿namespace SimpleAuthorization.Engine
+﻿using System;
+
+namespace SimpleAuthorization.Engine
 {
     public static class ActivationExtensions
     {
-        public static ISecurityItem AddSecurityItem(this ISecurityStore store)
+        public static ISecurityItem AddSecurityItem(this ISecurityStore store, string id = null)
         {
-            SecurityStore securityStore = (SecurityStore) store;
-            SecurityItem securityItem = new SecurityItem(store);
+            SecurityStore securityStore = (SecurityStore)store;
+            if (string.IsNullOrEmpty(id))
+                id = Guid.NewGuid().ToString();
+            SecurityItem securityItem = new SecurityItem((SecurityStore)store, id);
             securityStore.SecurityItems.Add(securityItem);
             return securityItem;
         }
-        public static ISecurityIdentity AddSecurityIdentity(this ISecurityStore store)
+        public static ISecurityIdentity AddSecurityIdentity(this ISecurityStore store, string id = null)
         {
+            if (string.IsNullOrEmpty(id))
+                id = Guid.NewGuid().ToString();
             SecurityStore securityStore = (SecurityStore)store;
-            SecurityIdentity securityIdentity = new SecurityIdentity(store);
+            SecurityIdentity securityIdentity = new SecurityIdentity((SecurityStore)store, id);
             securityStore.SecurityIdentities.Add(securityIdentity);
             return securityIdentity;
         }
 
-        public static IAccessAuthorization AccessAuthorize(this ISecurityStore store,ISecurityIdentity securityIdentity,ISecurityItem securityItem)
+        public static IAccessAuthorization AccessAuthorize(this ISecurityStore store, ISecurityIdentity securityIdentity, ISecurityItem securityItem, string id = null)
         {
+            if (string.IsNullOrEmpty(id))
+                id = Guid.NewGuid().ToString();
             SecurityStore securityStore = (SecurityStore)store;
-            AccessAuthorization accessAuthorization = new AccessAuthorization(store)
-                {SecurityIdentity = securityIdentity, SecurityItem = securityItem};
+            AccessAuthorization accessAuthorization = new AccessAuthorization((SecurityStore)store, id)
+            { SecurityIdentity = securityIdentity, SecurityItem = securityItem };
             securityStore.Authorizations.Add(accessAuthorization);
             return accessAuthorization;
         }
-        public static IConditionalAuthorization ConditionalAuthorize(this ISecurityStore store,ISecurityIdentity securityIdentity,ISecurityItem securityItem)
+        public static IConditionalAuthorization ConditionalAuthorize(this ISecurityStore store, ISecurityIdentity securityIdentity, ISecurityItem securityItem, string id = null)
         {
+            if (string.IsNullOrEmpty(id))
+                id = Guid.NewGuid().ToString();
+
             SecurityStore securityStore = (SecurityStore)store;
-            ConditionalAuthorization conditionalAuthorization = new ConditionalAuthorization(store)
-                {SecurityIdentity = securityIdentity, SecurityItem = securityItem};
+            ConditionalAuthorization conditionalAuthorization = new ConditionalAuthorization((SecurityStore)store, id)
+            { SecurityIdentity = securityIdentity, SecurityItem = securityItem };
             securityStore.Authorizations.Add(conditionalAuthorization);
             return conditionalAuthorization;
         }
 
-        public static T AddBagItem<T>(this T bagObject, string key, object value) where T : IBagObject
+        public static T AddBagItem<T>(this T bagObject, string key, string value) where T : IBagObject
         {
-            bagObject.Bag.Add(key,value);
+            bagObject.Bag.Add(key, value);
             return bagObject;
         }
 
@@ -56,7 +67,7 @@
             return authorization;
         }
 
-        public static T SetLifeTime<T>(this T authorization,IAuthorizationLifeTime lifeTime) where T: IAuthorization
+        public static T SetLifeTime<T>(this T authorization, IAuthorizationLifeTime lifeTime) where T : IAuthorization
         {
             authorization.LifeTime = lifeTime;
             return authorization;

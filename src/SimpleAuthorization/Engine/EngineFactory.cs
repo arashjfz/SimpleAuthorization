@@ -1,4 +1,6 @@
-﻿namespace SimpleAuthorization.Engine
+﻿using SimpleAuthorization.Storage;
+
+namespace SimpleAuthorization.Engine
 {
     public class EngineFactory
     {

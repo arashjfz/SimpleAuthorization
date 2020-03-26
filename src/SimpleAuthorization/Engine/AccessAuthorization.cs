@@ -1,29 +1,47 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace SimpleAuthorization.Engine
 {
     internal class AccessAuthorization:IAccessAuthorization,INotifyPropertyChanged
     {
+        public string Id { get; }
         private ISecurityItem _securityItem;
         private ISecurityIdentity _securityIdentity;
         private IAuthorizationLifeTime _lifeTime;
         private AccessType _accessType;
+        private readonly SecurityStore _store;
+        private readonly SecurityBag _bag;
 
-        public AccessAuthorization(ISecurityStore store)
+        public AccessAuthorization(SecurityStore store,string id)
         {
-            Store = store;
-            Bag = new SecurityBag();
+            Id = id;
+            _store = store;
+            _bag = new SecurityBag();
+            _bag.Added += BagOnAdded;
+            _bag.Removed += BagOnRemoved;
         }
+
+        private void BagOnRemoved(object sender, SecurityBagEventArgs e)
+        {
+            _store.OnBagRemoved(this, e.Key, e.Value);
+        }
+
+        private void BagOnAdded(object sender, SecurityBagEventArgs e)
+        {
+            _store.OnBagAdded(this, e.Key, e.Value);
+        }
+
         #region Implementation of IBagObject
 
-        public ISecurityBag Bag { get; }
+        public ISecurityBag Bag => _bag;
 
         #endregion
 
         #region Implementation of IAuthorization
 
-        public ISecurityStore Store { get; }
+        public ISecurityStore Store => _store;
 
         public ISecurityItem SecurityItem
         {
@@ -57,8 +75,6 @@ namespace SimpleAuthorization.Engine
                 OnPropertyChanged();
             }
         }
-
-        public ISecurityIdentity DelegatedBy { get; set; }
 
         #endregion
 

@@ -5,12 +5,28 @@ namespace SimpleAuthorization.Engine
 {
     internal class SecurityItem:ISecurityItem
     {
-        public SecurityItem(ISecurityStore store)
+        private readonly SecurityStore _store;
+        private readonly SecurityBag _bag;
+
+        public SecurityItem(SecurityStore store, string id)
         {
-            Store = store;
-            Bag = new SecurityBag();
+            _store = store;
+            Id = id;
+            _bag = new SecurityBag();
             Children = new SecurityCollection<ISecurityItem>().RegisterCollectionNotifyChanged(ChildrenChanged);
             Parents = new SecurityCollection<ISecurityItem>().RegisterCollectionNotifyChanged(ParentsChanged);
+            _bag.Added += BagOnAdded;
+            _bag.Removed += BagOnRemoved;
+        }
+
+        private void BagOnRemoved(object sender, SecurityBagEventArgs e)
+        {
+            _store.OnBagRemoved(this, e.Key, e.Value);
+        }
+
+        private void BagOnAdded(object sender, SecurityBagEventArgs e)
+        {
+            _store.OnBagAdded(this,e.Key,e.Value);
         }
 
         private void ParentsChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -19,12 +35,14 @@ namespace SimpleAuthorization.Engine
             {
                 ISecurityItem parent = (ISecurityItem)e.NewItems[0];
                 parent.Children.Add(this);
+                _store.OnSecurityItemRelationAdded(parent,this);
             }
 
             if (e.Action == NotifyCollectionChangedAction.Remove)
             {
                 ISecurityItem parent = (ISecurityItem)e.OldItems[0];
                 parent.Children.Remove(this);
+                _store.OnSecurityItemRelationRemoved(parent, this);
             }
 
             if (e.Action == NotifyCollectionChangedAction.Reset)
@@ -32,6 +50,7 @@ namespace SimpleAuthorization.Engine
                 foreach (ISecurityItem parent in e.OldItems)
                 {
                     parent.Children.Remove(this);
+                    _store.OnSecurityItemRelationRemoved(parent, this);
                 }
             }
         }
@@ -60,7 +79,9 @@ namespace SimpleAuthorization.Engine
 
         #region Implementation of ISecurityItem
 
-        public ISecurityStore Store { get; }
+        public string Id { get; }
+        public ISecurityStore Store => _store;
+
         public ICollection<ISecurityItem> Children { get; }
         public ICollection<ISecurityItem> Parents { get; }
 
@@ -68,7 +89,7 @@ namespace SimpleAuthorization.Engine
 
         #region Implementation of IBagObject
 
-        public ISecurityBag Bag { get; }
+        public ISecurityBag Bag => _bag;
 
         #endregion
     }

@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleAuthorization", "Simp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleAuthorization.Test", "SimpleAuthorization.Test\SimpleAuthorization.Test.csproj", "{EBBACE4E-93E8-48F7-A27A-BBE2012C0A68}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Storage", "Storage", "{AED0AFD0-F4AB-4304-87B5-BA1E9A4ED74F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleAuthorization.Nhibernate", "Storage\SimpleAuthorization.Nhibernate\SimpleAuthorization.Nhibernate.csproj", "{57C83A60-108A-4B07-9851-C5A8B654F31E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,9 +25,16 @@ Global
 		{EBBACE4E-93E8-48F7-A27A-BBE2012C0A68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBBACE4E-93E8-48F7-A27A-BBE2012C0A68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBBACE4E-93E8-48F7-A27A-BBE2012C0A68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57C83A60-108A-4B07-9851-C5A8B654F31E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57C83A60-108A-4B07-9851-C5A8B654F31E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57C83A60-108A-4B07-9851-C5A8B654F31E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57C83A60-108A-4B07-9851-C5A8B654F31E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{57C83A60-108A-4B07-9851-C5A8B654F31E} = {AED0AFD0-F4AB-4304-87B5-BA1E9A4ED74F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {44484089-6D4B-4B29-AAE6-3156FE8D1CF7}

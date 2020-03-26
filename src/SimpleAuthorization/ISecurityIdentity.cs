@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using SimpleAuthorization.Engine;
 
 namespace SimpleAuthorization
 {
