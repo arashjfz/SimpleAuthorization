@@ -186,7 +186,7 @@ namespace SimpleAuthorization.Engine
                 if (!securityItems.ContainsKey(storageId))
                     securityItems.Add(storageId, _store.AddSecurityItem(storageId));
             foreach (string securityItemId in securityItems.Keys)
-                if (storageSecurityItemIds.Contains(securityItemId))
+                if (!storageSecurityItemIds.Contains(securityItemId))
                     AddNewAction(StorageActionType.Add, new StorageSecurityItem(securityItemId));
             return securityItems;
         }
@@ -225,7 +225,7 @@ namespace SimpleAuthorization.Engine
                 if (!securityIdentities.ContainsKey(storageId))
                     securityIdentities.Add(storageId, _store.AddSecurityIdentity(storageId));
             foreach (string securityIdentityId in securityIdentities.Keys)
-                if (storageSecurityIdentityIds.Contains(securityIdentityId))
+                if (!storageSecurityIdentityIds.Contains(securityIdentityId))
                     AddNewAction(StorageActionType.Add, new StorageSecurityIdentity(securityIdentityId));
             return securityIdentities;
         }
